@@ -1,0 +1,54 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+
+  tasks:
+  - name: Stat go executable file.
+    ansible.builtin.stat:
+      path: "/usr/local/go/bin/go"
+    register: r_stat_go_exec
+
+  - name: Assert go executable exists with correct permissions.
+    ansible.builtin.assert:
+      that:
+        - r_stat_go_exec.stat.isdir is defined
+        - not r_stat_go_exec.stat.isdir
+        - r_stat_go_exec.stat.gr_name is defined
+        - r_stat_go_exec.stat.gr_name == "root"
+        - r_stat_go_exec.stat.pw_name is defined
+        - r_stat_go_exec.stat.pw_name == "root"
+        - r_stat_go_exec.stat.mode == "0755"
+        - r_stat_go_exec.stat.executable
+  
+  - name: Stat go src directory.
+    ansible.builtin.stat:
+      path: "/usr/local/go/src"
+    register: r_stat_go_src_dir
+
+  - name: Assert go src directory exists with correct permissions.
+    ansible.builtin.assert:
+      that:
+        - r_stat_go_src_dir.stat.isdir is defined
+        - r_stat_go_src_dir.stat.isdir
+        - r_stat_go_src_dir.stat.gr_name is defined
+        - r_stat_go_src_dir.stat.gr_name == "root"
+        - r_stat_go_src_dir.stat.pw_name is defined
+        - r_stat_go_src_dir.stat.pw_name == "root"
+        - r_stat_go_src_dir.stat.mode == "0755"
+
+  - name: Stat protobuf@v1.28.1 directory.
+    ansible.builtin.stat:
+      path: "/home/suzanne/.local/share/go/pkg/mod/google.golang.org/protobuf@v1.28.1"
+    register: r_stat_protobuf_dir
+
+  - name: Assert protobuf@v1.28.1 directory exists with correct permissions.
+    ansible.builtin.assert:
+      that:
+        - r_stat_protobuf_dir.stat.isdir is defined
+        - r_stat_protobuf_dir.stat.isdir
+        - r_stat_protobuf_dir.stat.gr_name is defined
+        - r_stat_protobuf_dir.stat.gr_name == "suzanne"
+        - r_stat_protobuf_dir.stat.pw_name is defined
+        - r_stat_protobuf_dir.stat.pw_name == "suzanne"
+        - r_stat_protobuf_dir.stat.mode == "0555"

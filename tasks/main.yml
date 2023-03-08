@@ -1,0 +1,7 @@
+---
+- name: Check install status
+  ansible.builtin.import_tasks: 01-get-install-status.yml
+- name: Install go
+  ansible.builtin.import_tasks: 02-install-go.yml
+- name: Install go packages
+  ansible.builtin.import_tasks: 03-install-go-pkgs.yml

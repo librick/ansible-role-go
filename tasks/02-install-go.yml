@@ -1,0 +1,30 @@
+- name: Get latest go version.
+  ansible.builtin.uri:
+    url: https://go.dev/VERSION?m=text
+    return_content: true
+  register: r_go_version_res
+  failed_when: >
+    r_go_version_res.status != 200 or
+    r_go_version_res.content_type != 'text/plain; charset=utf-8' or
+    r_go_version_res.content.startswith('go') != True
+
+- name: Persist latest go version.
+  ansible.builtin.set_fact:
+    r_go_version: "{{ r_go_version_res.content }}"
+
+- name: Delete go directory.
+  ansible.builtin.file:
+    state: absent
+    path: /usr/local/go
+  become: true
+  become_user: root
+  changed_when: false
+
+- name: Download and unarchive go release.
+  ansible.builtin.unarchive:
+    src: "https://dl.google.com/go/{{ r_go_version }}.linux-amd64.tar.gz"
+    dest: "/usr/local/"
+    remote_src: true
+  become: true
+  become_user: root
+  changed_when: false

@@ -1,0 +1,12 @@
+---
+# The user for which go packages will be installed.
+go_user: "{{ ansible_user }}"
+# The go packages to be installed for go_user.
+go_packages_to_install:
+  - golang.org/x/tools/gopls@latest
+  - golang.org/x/tools/cmd/goimports@latest
+  - github.com/go-delve/delve/cmd/dlv@latest
+  - github.com/mdempsky/gocode@latest
+  - github.com/ramya-rao-a/go-outline@latest
+  - google.golang.org/protobuf/cmd/protoc-gen-go@latest
+  - honnef.co/go/tools/cmd/staticcheck@latest

@@ -1,0 +1,23 @@
+- name: Check if go binary exists in filesystem.
+  ansible.builtin.stat:
+    path: /usr/local/go/bin/go
+  register: r_stat_go
+
+- name: Check if go is installed.
+  ansible.builtin.set_fact:
+    r_go_installed: "{{
+      r_stat_go.stat.exists is defined and
+      r_stat_go.stat.exists and
+      r_stat_go.stat.executable is defined and
+      r_stat_go.stat.executable
+      }}"
+
+- name: Debug, print message if go is installed.
+  ansible.builtin.debug:
+    msg: "go is installed, found existing installation"
+  when: r_go_installed
+
+- name: Debug, pring message if go is not installed.
+  ansible.builtin.debug:
+    msg: "go is not installed"
+  when: not r_go_installed
